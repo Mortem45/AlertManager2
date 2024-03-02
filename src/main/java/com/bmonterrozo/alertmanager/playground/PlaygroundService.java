@@ -2,6 +2,7 @@ package com.bmonterrozo.alertmanager.playground;
 
 import com.bmonterrozo.alertmanager.entity.Alert;
 import com.bmonterrozo.alertmanager.jobs.ElasticJob;
+import com.bmonterrozo.alertmanager.jobs.SqlJob;
 import com.bmonterrozo.alertmanager.jobs.services.JobService;
 import com.bmonterrozo.alertmanager.jobs.RabbitMQJob;
 import com.bmonterrozo.alertmanager.service.AlertService;
@@ -41,6 +42,10 @@ public class PlaygroundService {
                     case "RABBITMQ":
                         LOG.info("PlaygroundService - RABBITMQ {}", alert.getName());
                         jobService.schedule(RabbitMQJob.class, alert);
+                        break;
+                    case "SQL":
+                        LOG.info("PlaygroundService - SQL {}", alert.getName());
+                        jobService.schedule(SqlJob.class, alert);
                         break;
                 }
             }
