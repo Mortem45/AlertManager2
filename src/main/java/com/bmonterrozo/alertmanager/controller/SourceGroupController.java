@@ -43,7 +43,6 @@ public class SourceGroupController {
     public boolean delete(@PathVariable("id") int id) {
         return sourceGroupService.delete(id);
     }
-//    TODO: ADD relations with Datasources
 
     @PutMapping("{sourceGroupId}/dataSource/{dataSourceId}")
     public SourceGroup addDataSource(
