@@ -24,7 +24,6 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-amqp'
 	implementation 'org.springframework.boot:spring-boot-starter-data-couchbase'
-	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
@@ -38,6 +37,9 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.amqp:spring-rabbit-test'
+	implementation 'co.elastic.clients:elasticsearch-java:8.12.2'
+	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.17.0-rc1'
+	implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
 }
 
 tasks.named('test') {
