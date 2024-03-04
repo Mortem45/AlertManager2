@@ -1,6 +1,7 @@
 package com.bmonterrozo.alertmanager.playground;
 
 import com.bmonterrozo.alertmanager.entity.Alert;
+import com.bmonterrozo.alertmanager.jobs.CouchbaseJob;
 import com.bmonterrozo.alertmanager.jobs.ElasticJob;
 import com.bmonterrozo.alertmanager.jobs.SqlJob;
 import com.bmonterrozo.alertmanager.jobs.services.JobService;
@@ -46,6 +47,10 @@ public class PlaygroundService {
                     case "SQL":
                         LOG.info("PlaygroundService - SQL {}", alert.getName());
                         jobService.schedule(SqlJob.class, alert);
+                        break;
+                    case "COUCHBASE":
+                        LOG.info("PlaygroundService - COUCHBASE {}", alert.getName());
+                        jobService.schedule(CouchbaseJob.class, alert);
                         break;
                 }
             }
