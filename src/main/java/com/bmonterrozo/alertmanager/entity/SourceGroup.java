@@ -46,7 +46,10 @@ public class SourceGroup {
     public DataSource getRandomDataSource() {
         Random random = new Random();
         int indiceAleatorio = random.nextInt(this.dataSources.size());
-        return this.dataSources.get(indiceAleatorio);
+        return this.dataSources.stream()
+                .filter(obj -> !obj.isActive())
+                .toList()
+                .get(indiceAleatorio);
     }
 }
 

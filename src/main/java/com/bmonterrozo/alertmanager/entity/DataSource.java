@@ -19,6 +19,7 @@ public class DataSource {
     private Integer port;
     private String username;
     private String password;
+    private boolean active;
 
     @OneToOne
     @JoinColumn(name = "data_source_type_id")
