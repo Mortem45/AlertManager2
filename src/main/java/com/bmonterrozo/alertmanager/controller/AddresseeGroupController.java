@@ -44,13 +44,13 @@ public class AddresseeGroupController {
         return addresseeService.delete(id);
     }
 
-    @PutMapping("{groupId}/contact/{contactId}")
+    @PutMapping("{groupId}/addressee/{addresseeId}")
     public AddresseeGroup addContact(
             @PathVariable("groupId") int groupId,
-            @PathVariable("contactId") int contactId
+            @PathVariable("addresseeId") int addresseeId
     ) {
         AddresseeGroup addresseeGroup = addresseeGroupService.findById(groupId).get();
-        Addressee addressee = addresseeService.findById(contactId).get();
+        Addressee addressee = addresseeService.findById(addresseeId).get();
         addresseeGroup.addAddressee(addressee);
         return addresseeGroupService.save(addresseeGroup);
     }
