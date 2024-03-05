@@ -1,7 +1,7 @@
 package com.bmonterrozo.alertmanager.controller;
-import com.bmonterrozo.alertmanager.entity.Group;
+import com.bmonterrozo.alertmanager.entity.AddresseeGroup;
 import com.bmonterrozo.alertmanager.entity.Notification;
-import com.bmonterrozo.alertmanager.service.GroupService;
+import com.bmonterrozo.alertmanager.service.AddresseeGroupService;
 import com.bmonterrozo.alertmanager.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ public class NotificationController {
     private NotificationService notificationService;
 
     @Autowired
-    private GroupService groupService;
+    private AddresseeGroupService addresseeGroupService;
 
     @GetMapping
     public List<Notification> findAll() {
@@ -43,24 +43,24 @@ public class NotificationController {
         return notificationService.delete(id);
     }
 
-    @PutMapping("{notificationId}/group/{groupId}")
-    public Notification addDataSource(
+    @PutMapping("{notificationId}/addresseeGroup/{addresseeGroupId}")
+    public Notification addAddresseeGroupNotification(
             @PathVariable("notificationId") int notificationId,
-            @PathVariable("groupId") int groupId
+            @PathVariable("addresseeGroupId") int addresseeGroupId
     ) {
         Notification notification = notificationService.findById(notificationId).get();
-        Group group = groupService.findById(groupId).get();
-        notification.addNotificationGroup(group);
+        AddresseeGroup addresseeGroup = addresseeGroupService.findById(addresseeGroupId).get();
+        notification.addNotificationAddresseeGroup(addresseeGroup);
         return notificationService.save(notification);
     }
 
-    @DeleteMapping("{notificationId}/group/{groupId}")
-    public Notification removeDataSource(
+    @DeleteMapping("{notificationId}/addresseeGroup/{addresseeGroupId}")
+    public Notification removeAddresseeGroupNotification(
             @PathVariable("notificationId") int notificationId,
-            @PathVariable("groupId") int groupId
+            @PathVariable("addresseeGroupId") int addresseeGroupId
     ) {
         Notification notification = notificationService.findById(notificationId).get();
-        notification.removeNotificationGroup(groupId);
+        notification.removeNotificationAddresseeGroup(addresseeGroupId);
         return notificationService.save(notification);
     }
 }

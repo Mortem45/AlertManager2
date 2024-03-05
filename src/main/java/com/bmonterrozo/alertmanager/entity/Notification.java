@@ -13,16 +13,15 @@ public class Notification {
     private Integer id;
     private String name;
     private boolean active;
-    private String sender;
     private String message;
 
     @ManyToMany
     @JoinTable(
-            name = "notifications_groups",
+            name = "notifications_addressee_groups",
             joinColumns = @JoinColumn(name = "notification_id"),
-            inverseJoinColumns = @JoinColumn(name = "group_id")
+            inverseJoinColumns = @JoinColumn(name = "addressee_group_id")
     )
-    private List<Group> groups;
+    private List<AddresseeGroup> addresseeGroups;
 
     @Enumerated(EnumType.ORDINAL)
     private NotificationType notificationType;
@@ -31,15 +30,15 @@ public class Notification {
     @JoinColumn(name = "notification_channel_id")
     private NotificationChannel notificationChannel;
 
-    public void addNotificationGroup(Group notificationGroup) {
-        Group cont = this.groups.stream().filter(c -> c == notificationGroup).findFirst().orElse(null);
-        if (cont == null) this.groups.add(notificationGroup);
+    public void addNotificationAddresseeGroup(AddresseeGroup notificationGroup) {
+        AddresseeGroup cont = this.addresseeGroups.stream().filter(c -> c == notificationGroup).findFirst().orElse(null);
+        if (cont == null) this.addresseeGroups.add(notificationGroup);
         notificationGroup.getNotifications().add(this);
     }
 
-    public void removeNotificationGroup(int notificationGroupId) {
-        Group group = this.groups.stream().filter(c -> c.getId() == notificationGroupId).findFirst().orElse(null);
-        if (group != null) this.groups.remove(group);
-        group.getNotifications().remove(this);
+    public void removeNotificationAddresseeGroup(int notificationGroupId) {
+        AddresseeGroup addresseeGroup = this.addresseeGroups.stream().filter(c -> c.getId() == notificationGroupId).findFirst().orElse(null);
+        if (addresseeGroup != null) this.addresseeGroups.remove(addresseeGroup);
+        addresseeGroup.getNotifications().remove(this);
     }
 }
