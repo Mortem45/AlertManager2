@@ -20,7 +20,7 @@ public class Addressee {
     @JsonIgnore
     private List<AddresseeGroup> addresseeGroups;
 
-    @OneToOne
-    @JoinColumn(name = "notification_channel_id")
+    @ManyToOne
+    @JoinColumn(name = "notification_channel_id", referencedColumnName = "id")
     private NotificationChannel notificationChannel;
 }

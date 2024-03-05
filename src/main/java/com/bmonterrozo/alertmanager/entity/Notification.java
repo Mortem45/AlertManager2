@@ -26,8 +26,8 @@ public class Notification {
     @Enumerated(EnumType.ORDINAL)
     private NotificationType notificationType;
 
-    @OneToOne
-    @JoinColumn(name = "notification_channel_id")
+    @ManyToOne
+    @JoinColumn(name = "notification_channel_id", referencedColumnName = "id")
     private NotificationChannel notificationChannel;
 
     public void addNotificationAddresseeGroup(AddresseeGroup notificationGroup) {
