@@ -21,8 +21,8 @@ public class DataSource {
     private String password;
     private boolean active;
 
-    @OneToOne
-    @JoinColumn(name = "data_source_type_id")
+    @ManyToOne
+    @JoinColumn(name = "data_source_type_id", referencedColumnName = "id")
     private DataSourceType dataSourceType;
 
 
@@ -30,8 +30,5 @@ public class DataSource {
     @JsonIgnore
     private List<SourceGroup> sourceGroups;
 
-//    @ManyToOne
-//    @JoinColumn(name = "data_source_group_id", referencedColumnName = "id")
-//    @JsonIgnore
-//    private SourceGroup sourceGroup;
+
 }
