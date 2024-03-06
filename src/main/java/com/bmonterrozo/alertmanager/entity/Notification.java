@@ -12,6 +12,7 @@ public class Notification {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    private String title;
     private boolean active;
     private String message;
 
@@ -26,9 +27,6 @@ public class Notification {
     @Enumerated(EnumType.ORDINAL)
     private NotificationType notificationType;
 
-    @ManyToOne
-    @JoinColumn(name = "notification_channel_id", referencedColumnName = "id")
-    private NotificationChannel notificationChannel;
 
     public void addNotificationAddresseeGroup(AddresseeGroup notificationGroup) {
         AddresseeGroup cont = this.addresseeGroups.stream().filter(c -> c == notificationGroup).findFirst().orElse(null);
