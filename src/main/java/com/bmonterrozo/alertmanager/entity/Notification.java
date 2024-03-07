@@ -16,7 +16,7 @@ public class Notification {
     private boolean active;
     private String message;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "notifications_addressee_groups",
             joinColumns = @JoinColumn(name = "notification_id"),

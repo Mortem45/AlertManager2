@@ -23,7 +23,7 @@ public class AddresseeGroup {
     )
     private List<Addressee> addressees;
 
-    @ManyToMany(mappedBy = "addresseeGroups")
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "addresseeGroups")
     @JsonIgnore
     private List<Notification> notifications;
 
