@@ -1,5 +1,6 @@
 package com.bmonterrozo.alertmanager.service;
 
+import com.bmonterrozo.alertmanager.entity.AddresseeGroup;
 import com.bmonterrozo.alertmanager.entity.Notification;
 import com.bmonterrozo.alertmanager.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,10 @@ public class NotificationService {
             notificationRepository.delete(notification);
             return true;
         }).orElse(false);
+    }
+
+    public List<AddresseeGroup> getAddresseeGroupByNotifi(Integer notificationId) {
+        Notification notification = notificationRepository.findById(notificationId).orElseThrow(() ->  new RuntimeException("notification not found: " + notificationId));
+        return notification.getAddresseeGroups();
     }
 }
