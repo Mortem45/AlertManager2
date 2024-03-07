@@ -12,19 +12,20 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.StringJoiner;
 
+@Component
 public class RabbitMQJob implements Job {
 
     private static final Logger LOG = LoggerFactory.getLogger(RabbitMQJob.class);
-    private final RabbitMQService rabbitMQService;
 
-    public RabbitMQJob(RabbitMQService rabbitMQService) {
-        this.rabbitMQService = rabbitMQService;
-    }
+    @Autowired
+    private  RabbitMQService rabbitMQService;
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {

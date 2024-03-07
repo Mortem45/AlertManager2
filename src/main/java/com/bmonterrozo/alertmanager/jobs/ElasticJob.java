@@ -6,10 +6,13 @@ import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.TotalHits;
 import com.bmonterrozo.alertmanager.entity.Alert;
 import com.bmonterrozo.alertmanager.jobs.services.ElasticService;
+import com.bmonterrozo.alertmanager.jobs.senders.SenderService;
 import io.micrometer.common.util.StringUtils;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
@@ -18,16 +21,15 @@ import java.util.StringJoiner;
 
 
 @DisallowConcurrentExecution
+@Component
 public class ElasticJob implements Job {
     private static final Logger LOG = LoggerFactory.getLogger(ElasticJob.class);
+    @Autowired
 
-    private final ElasticService elasticService;
-
+    private ElasticService elasticService;
+    @Autowired
+    private SenderService senderService;
     SearchResponse<Void> response;
-
-    public ElasticJob(ElasticService elasticService) {
-        this.elasticService = elasticService;
-    }
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -46,27 +48,29 @@ public class ElasticJob implements Job {
                 } catch (RuntimeException | NoSuchAlgorithmException | KeyStoreException |
                          KeyManagementException e) {
                     throw new RuntimeException(e);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
             }
         } else LOG.info("Alert - Id: {} - Name:'{}' - isActive:{}", alert.getId(), alert.getName(), alert.isActive());
 
     }
 
-    protected void validateELK(SearchResponse<Void> response, Alert alert ) {
+    protected void validateELK(SearchResponse<Void> response, Alert alert ) throws Exception {
         TotalHits total = response.hits().total();
         if (total.value() > alert.getThreshold()) {
-            LOG.debug("validateELK - Alert: {} - Total Hits: {} ", alert.getId() ,total.value());
+            LOG.debug("validateELK - AlertId: {} - AlertName: {} - Total Hits: {} ", alert.getId(), alert.getName(),total.value());
             Aggregate agre = response.aggregations().get("result");
             StringJoiner info = new StringJoiner("\n");
             StringTermsAggregate sterms= agre.sterms();
+
+            info.add("Total Hits: " + total.value());
 
             sterms.buckets().array().stream().forEach(bucket -> {
                 info.add(bucket.key().stringValue()+ ": " + bucket.docCount() );
             });
 
-            LOG.info("\nAlarm Details: {}", info);
-            LOG.info("ALARMAAAAAAA!!!!! '{}' - '{}'", alert.getName(), total.value());
-//          TODO save alerthist
+            senderService.sendAlert(alert, info);
 //          TODO send message
         }
     }

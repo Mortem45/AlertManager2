@@ -9,14 +9,18 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
 public class SqlJob implements Job {
 
     private static final Logger LOG = LoggerFactory.getLogger(SqlJob.class);
 
-    private final SqlService sqlService;
+    @Autowired
+    private SqlService sqlService;
 
     public SqlJob(SqlService sqlService) {
         this.sqlService = sqlService;
