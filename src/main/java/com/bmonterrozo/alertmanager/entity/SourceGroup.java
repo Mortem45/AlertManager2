@@ -23,8 +23,8 @@ public class SourceGroup {
     )
     private List<DataSource> dataSources;
 
-    @OneToOne
-    @JoinColumn(name = "data_source_type_id")
+    @ManyToOne
+    @JoinColumn(name = "data_source_type_id", referencedColumnName = "id")
     private DataSourceType dataSourceType;
 
 

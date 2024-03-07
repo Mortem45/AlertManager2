@@ -26,7 +26,7 @@ public class Alert {
     @JoinColumn(name = "notification_id")
     private Notification notification;
 
-    @OneToOne
-    @JoinColumn(name = "platform_id")
+    @ManyToOne
+    @JoinColumn(name = "platform_id", referencedColumnName = "id")
     private Platform platform;
 }
