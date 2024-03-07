@@ -14,6 +14,7 @@ public class Addressee {
     private Integer id;
     private String name;
     private String value;
+    private boolean active;
 
 
     @ManyToMany(mappedBy = "addressees")
