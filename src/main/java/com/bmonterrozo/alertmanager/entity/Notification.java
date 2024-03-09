@@ -15,6 +15,8 @@ public class Notification {
     private String title;
     private boolean active;
     private String message;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
