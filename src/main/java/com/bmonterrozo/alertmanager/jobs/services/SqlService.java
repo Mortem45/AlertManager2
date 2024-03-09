@@ -14,7 +14,7 @@ public class SqlService {
 
     private static final Logger LOG = LoggerFactory.getLogger(SqlService.class);
 
-    public Map<String, Long> checkOracleAlert(Alert alert) {
+    public Map<String, Long> checkSQLAlert(Alert alert) {
         String url = alert.getSourceGroup().getRandomDataSource().getUrl();
         String user = alert.getSourceGroup().getRandomDataSource().getUsername();
         String password = alert.getSourceGroup().getRandomDataSource().getPassword();
