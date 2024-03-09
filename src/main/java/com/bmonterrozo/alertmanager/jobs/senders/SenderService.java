@@ -3,6 +3,7 @@ package com.bmonterrozo.alertmanager.jobs.senders;
 import com.bmonterrozo.alertmanager.entity.Addressee;
 import com.bmonterrozo.alertmanager.entity.AddresseeGroup;
 import com.bmonterrozo.alertmanager.entity.Alert;
+import com.bmonterrozo.alertmanager.entity.Notification;
 import com.bmonterrozo.alertmanager.service.NotificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.StringJoiner;
 
 @Service
@@ -24,6 +26,8 @@ public class SenderService {
     @Autowired
     private SMSService smsService;
 
+    @Autowired
+    private EmailService emailService;
 
 
     public List<Addressee> getAddressees (Alert alert) {
@@ -44,14 +48,17 @@ public class SenderService {
 
     public void sendAlert(Alert alert, StringJoiner alertInfo) throws Exception {
         List<Addressee> addressees = getAddressees(alert);
+        Optional<Notification> notification = notificationService.findById(alert.getNotification().getId());
 
         for (Addressee addressee: addressees) {
             switch (addressee.getNotificationChannel().getName()) {
                 case "SMS":
-                    smsService.sendSMS(alert.getNotification().getId(), addressee, alertInfo);
+                    smsService.sendSMS(notification, addressee, alertInfo);
                     Thread.sleep(1000);
                     break;
                 case "EMAIL":
+                    emailService.sendEmail(notification, addressee, String.valueOf(alertInfo), alert.getPlatform().getName());
+                    Thread.sleep(1000);
                     break;
             }
         }
