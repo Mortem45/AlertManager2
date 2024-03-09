@@ -11,6 +11,7 @@ public class Alert {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String search;
     private boolean active;
     private Integer threshold;
