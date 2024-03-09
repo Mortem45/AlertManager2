@@ -29,6 +29,9 @@ public class SenderService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private TeamsService teamsService;
+
 
     public List<Addressee> getAddressees (Alert alert) {
         List<AddresseeGroup> addresseeGroups = notificationService.getAddresseeGroupByNotifi(alert.getNotification().getId());
@@ -58,6 +61,10 @@ public class SenderService {
                     break;
                 case "EMAIL":
                     emailService.sendEmail(notification, addressee, String.valueOf(alertInfo), alert.getPlatform().getName());
+                    Thread.sleep(1000);
+                    break;
+                case "TEAMS":
+                    teamsService.sendPostTeams(notification, addressee, String.valueOf(alertInfo), alert.getPlatform().getName());
                     Thread.sleep(1000);
                     break;
             }
