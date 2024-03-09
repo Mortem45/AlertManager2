@@ -1,6 +1,7 @@
 package com.bmonterrozo.alertmanager.jobs;
 
 import com.bmonterrozo.alertmanager.entity.Alert;
+import com.bmonterrozo.alertmanager.jobs.senders.SenderService;
 import com.bmonterrozo.alertmanager.jobs.services.SqlService;
 import io.micrometer.common.util.StringUtils;
 import org.quartz.Job;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.StringJoiner;
 
 @Component
 public class SqlJob implements Job {
@@ -21,6 +23,8 @@ public class SqlJob implements Job {
 
     @Autowired
     private SqlService sqlService;
+    @Autowired
+    private SenderService senderService;
 
     public SqlJob(SqlService sqlService) {
         this.sqlService = sqlService;
@@ -33,28 +37,32 @@ public class SqlJob implements Job {
         LOG.info("execute - Alert - Id: {} - Name:'{}' - isActive:{}", alert.getId(), alert.getName(), alert.isActive());
         if (!StringUtils.isEmpty(alert.getSearch())) {
             LOG.debug("execute - Alert - Search {}", alert.getSearch());
-            Map<String, Long> result = sqlService.checkOracleAlert(alert);
+            Map<String, Long> result = sqlService.checkSQLAlert(alert);
             if (result != null) {
-                validateSqlAlert(result, alert);
+                try {
+                    validateSqlAlert(result, alert);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
 
-    public void validateSqlAlert(Map<String, Long> result, Alert alert) {
+    public void validateSqlAlert(Map<String, Long> result, Alert alert) throws Exception {
         long countTotal = 0L;
-        String groupBy = "";
+        StringJoiner info = new StringJoiner("\n");
 
         for (Map.Entry<String, Long> entry : result.entrySet()) {
             String name = entry.getKey();
             Long value = entry.getValue();
             countTotal += value;
-            groupBy = groupBy + "\n" + name + ": " + value;
-            LOG.debug("checkOracleAlert() - name: {}, count: {}", name, value);
+            info.add(name + ": " + value);
+            LOG.debug("validateSqlAlert() - name: {}, count: {}", name, value);
         }
         if (countTotal >= alert.getThreshold()) {
 //            TODO: Save History alarm
-//            TODO: Send MSG
-            LOG.debug("ALARMA!!!!! - countTotal: {}, groupBy: {}", countTotal, groupBy);
+            senderService.sendAlert(alert, info);
+            LOG.debug("ALARMA!!!!! - countTotal: {}, groupBy: {}", countTotal, info);
         }
     }
 }
